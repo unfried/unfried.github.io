@@ -1,1 +1,58 @@
-Hello World
+<html>
+
+<body>
+    <h1>Moderators</h1>
+    <ul id="moderators"></ul>
+
+    <script>
+        function createNode(element) {
+            return document.createElement(element);
+        }
+
+        function append(parent, el) {
+            return parent.appendChild(el);
+        }
+
+        const ul = document.getElementById('moderators');
+        const url = 'https://www.speedrun.com/api/v1/games/k6q4rqzd';
+
+        let moderators = new Map();
+        fetch(url)
+            .then((resp) => resp.json())
+            .then(function (data) {
+                let iter = data.data.moderators;
+
+                Object.keys(iter).forEach(function (key) {
+                    moderators[key] = iter[key];
+                    let li = createNode('li');
+                    let img = createNode('img');
+                    let span = createNode('span');
+
+
+                    span.innerHTML = `${key} - ${iter[key]}`;
+
+                })
+            })
+
+
+            .then(function () {
+                Object.keys(moderators).forEach(function (key) {
+                    fetch(`https://www.speedrun.com/api/v1/users/${key}`)
+                        .then((resp) => resp.json())
+                        .then(function (data) {
+                            let moderatorName = data.names.international;
+                            moderators[key];
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                })
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+    </script>
+</body>
+
+<html>
